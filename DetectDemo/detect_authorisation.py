@@ -9,8 +9,8 @@ import imutils
 import time
 import cv2
 import os
-import serial
-s = serial.Serial('COM1', 9600)
+# import serial
+# s = serial.Serial('COM1', 9600)
 
 def detect_authorisation(frame, faceNet, maskNet):
 	# grab the dimensions of the frame and then construct a blob
@@ -74,7 +74,7 @@ def detect_authorisation(frame, faceNet, maskNet):
 	# locations
 	return (locs, preds)
 
-def logSystem(loglabel):
+def logSystem(label):
 	with open('Log.csv', 'r+') as f:
 		myDataList = f.readlines()
 		nameList = []
@@ -82,7 +82,7 @@ def logSystem(loglabel):
 			entry = line.split(',')
 			nameList.append(entry[0])
 
-		if loglabel not in nameList:
+		if label not in nameList:
 			time_now = datetime.now()
 			tStr = time_now.strftime('%H:%M:%S')
 			dStr = time_now.strftime('%d/%m/%Y')
@@ -120,13 +120,13 @@ while True:
 
 		# determine the class label and color we'll use to draw
 		# the bounding box and text
-		loglabel = "Authorised" if authorised > unauthorised else "Unauthorised"
+		#loglabel = "Authorised" if authorised > unauthorised else "Unauthorised"
 		label = "Authorised" if authorised > unauthorised else "Unauthorised"
 
-		if(label == "Authorised"):
-			s.write(b'1')
-		else:
-			s.write(b'0')
+		# if(label == "Authorised"):
+		# 	s.write(b'1')
+		# else:
+		# 	s.write(b'0')
 
 		color = (0, 255, 0) if label == "Authorised" else (0, 0, 255)
 		  
@@ -138,7 +138,7 @@ while True:
 		cv2.putText(frame, label, (startX, startY - 10),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
 		cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
-		logSystem(loglabel)
+		logSystem(label)
 
 	# show the output frame
 	cv2.imshow("Frame", frame)

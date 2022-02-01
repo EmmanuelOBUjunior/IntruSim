@@ -23,10 +23,10 @@ import os
 # initialize the initial learning rate, number of epochs to train for,
 # and batch size
 INIT_LR = 1e-4
-EPOCHS = 20
-BS = 32
+EPOCHS = 25
+BS = 10
 
-DIRECTORY = r"E:\Codes\Simulation\DetectDemo\images"
+DIRECTORY = r"E:\Codes\Simulation\IntrDecDemo\DetectDemo\images"
 CATEGORIES = ["authorised", "unauthorised"]
 
 # grab the list of images in our dataset directory, then initialize
