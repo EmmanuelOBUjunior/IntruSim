@@ -1,6 +1,7 @@
 # import the necessary packages
 from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from datetime import datetime
+from datetime import timedelta
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
 from imutils.video import VideoStream
@@ -78,14 +79,16 @@ def logSystem(label):
 	with open('Log.csv', 'r+') as f:
 		myDataList = f.readlines()
 		nameList = []
+		time_now = datetime.now()
+		tStr = time_now.strftime('%H:%M:%S')
+		tDatObj = datetime.strptime(tStr, '%H:%M:%S')
+		conditionTime = tDatObj + timedelta(minutes= 1)
+		dStr = time_now.strftime('%d/%m/%Y')
 		for line in myDataList:
 			entry = line.split(',')
 			nameList.append(entry[0])
 
-		if label not in nameList:
-			time_now = datetime.now()
-			tStr = time_now.strftime('%H:%M:%S')
-			dStr = time_now.strftime('%d/%m/%Y')
+		if label not in nameList or conditionTime > tDatObj:
 			f.writelines(f'{label}, {tStr}, {dStr}\n')
 
 
@@ -120,7 +123,6 @@ while True:
 
 		# determine the class label and color we'll use to draw
 		# the bounding box and text
-		#loglabel = "Authorised" if authorised > unauthorised else "Unauthorised"
 		label = "Authorised" if authorised > unauthorised else "Unauthorised"
 
 		# if(label == "Authorised"):
@@ -131,6 +133,7 @@ while True:
 		color = (0, 255, 0) if label == "Authorised" else (0, 0, 255)
 		  
 		# include the probability in the label
+		labellog = "{}: ".format(label, max(authorised, unauthorised))
 		label = "{}: {:.2f}%".format(label, max(authorised, unauthorised) * 100)
 
 		# display the label and bounding box rectangle on the output
@@ -138,7 +141,7 @@ while True:
 		cv2.putText(frame, label, (startX, startY - 10),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.45, color, 2)
 		cv2.rectangle(frame, (startX, startY), (endX, endY), color, 2)
-		logSystem(label)
+		logSystem(labellog)
 
 	# show the output frame
 	cv2.imshow("Frame", frame)
