@@ -88,7 +88,7 @@ def logSystem(label):
 			entry = line.split(',')
 			nameList.append(entry[0])
 
-		if label not in nameList or conditionTime < tDatObj:
+		if label not in nameList or conditionTime > tDatObj:
 			f.writelines(f'{label}, {tStr}, {dStr}\n')
 
 
